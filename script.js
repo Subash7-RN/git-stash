@@ -8,3 +8,9 @@ document.querySelectorAll("nav a").forEach(link => {
         }
     });
 });
+
+// Change background on scroll
+window.addEventListener("scroll", () => {
+    const scrollPosition = window.scrollY;
+    document.body.style.background = scrollPosition > 100 ? "linear-gradient(135deg, #a1c4fd, #c2e9fb)" : "linear-gradient(135deg, #ffecd2, #fcb69f)";
+});
