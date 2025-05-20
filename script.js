@@ -12,16 +12,40 @@ function formatINR(value) {
 function updateCartUI() {
   cartItems.innerHTML = '';
   let total = 0;
+  let totalQty = 0;
 
-  cart.forEach((item, index) => {
+  cart.forEach(item => {
     const li = document.createElement('li');
-    li.textContent = `${item.title} - ${formatINR(item.price)} x ${item.quantity}`;
-    total += item.price * item.quantity;
+    li.className = 'cart-item';
+
+    li.innerHTML = `
+      <img src="${item.image}" alt="${item.title}">
+      <div>
+        <p><strong>${item.title}</strong></p>
+        <p>${formatINR(item.price)} x <input type="number" min="1" value="${item.quantity}" data-id="${item.id}" /></p>
+        <p>Subtotal: ${formatINR(item.price * item.quantity)}</p>
+      </div>
+    `;
+
     cartItems.appendChild(li);
+    total += item.price * item.quantity;
+    totalQty += item.quantity;
   });
 
-  cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+  cartCount.textContent = totalQty;
   totalElement.textContent = `Total: ${formatINR(total)}`;
+
+  document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const id = parseInt(e.target.dataset.id);
+      const qty = parseInt(e.target.value);
+      const item = cart.find(i => i.id === id);
+      if (item && qty > 0) {
+        item.quantity = qty;
+        updateCartUI();
+      }
+    });
+  });
 }
 
 function addToCart(product) {
@@ -37,8 +61,8 @@ function addToCart(product) {
 async function fetchProducts() {
   try {
     const res = await fetch('https://fakestoreapi.com/products');
-    const data = await res.json();
-    renderProducts(data);
+    const products = await res.json();
+    renderProducts(products);
   } catch (err) {
     productList.innerHTML = '<p>Failed to load products.</p>';
   }
@@ -48,19 +72,21 @@ function renderProducts(products) {
   products.forEach(product => {
     const card = document.createElement('div');
     card.className = 'product';
+    const priceINR = product.price * 83.5;
+
     card.innerHTML = `
       <img src="${product.image}" alt="${product.title}">
       <h3>${product.title}</h3>
-      <p>${formatINR(product.price * 83.5)}</p> <!-- approx USD to INR -->
+      <p>${formatINR(priceINR)}</p>
       <button>Add to Cart</button>
     `;
 
-    const btn = card.querySelector('button');
-    btn.addEventListener('click', () => {
+    card.querySelector('button').addEventListener('click', () => {
       addToCart({
         id: product.id,
         title: product.title,
-        price: product.price * 83.5, // Convert to INR
+        price: priceINR,
+        image: product.image
       });
     });
 
