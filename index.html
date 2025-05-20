@@ -3,16 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIT updated commands</title>
+    <title>IndiaShop - E-commerce</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="card">
-        <h2>Sample Card</h2>
-        <p>Sample Card design with updated external css file</p>
-    </div>
+    <header>
+        <h1>🛍️ IndiaShop</h1>
+        <div id="cart-info">Cart 🛒 (<span id="cart-count">0</span>)</div>
+    </header>
+
+    <section id="controls">
+        <select id="category-select">
+            <option value="all">All Categories</option>
+        </select>
+        <input type="text" id="search-bar" placeholder="Search products..." />
+    </section>
+
+    <main>
+        <section id="product-list" class="products"></section>
+        <section id="cart-section">
+            <h2>Your Cart</h2>
+            <ul id="cart-items"></ul>
+            <p id="total">Total: ₹0</p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 
 </html>
